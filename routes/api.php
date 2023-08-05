@@ -17,3 +17,17 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group(['middleware' => ['cors', 'json.response']], function () {
+    // ...
+    Route::post('/login', [App\Http\Controllers\Auth\ApiAuthController::class, 'login'])->name('login.api');
+    Route::post('/register', [App\Http\Controllers\Auth\ApiAuthController::class, 'register'])->name('register.api');
+
+
+});
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('/logout', 'Auth\ApiAuthController@logout')->name('logout.api');
+    Route::post('/reset_password', [App\Http\Controllers\Auth\ResetPasswordController::class, 'resetPassword'])->name('reset_password.api');
+
+});
